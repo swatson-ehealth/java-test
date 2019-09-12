@@ -26,10 +26,19 @@ public class Prescription {
         return medication;
     }
     
+    /**
+     * Returns the total cost of the medicine associated with the prescription
+     * @return the cost of the medication
+     */
     public int getTotalCost() {
         return this.medication.calculateMedicationCost(this.size);
     }
     
+    /**
+     * Returns the optimal points associated with the a purchase of the
+     * medication
+     * @return 
+     */
     public int getTotalOptimalPointBonus() {
         return this.medication.getOptimalPointBonus();
     }

@@ -42,6 +42,12 @@ public class Customer {
         return decimalFormat.format(totalCost);
     }
     
+    /**
+     * Returns the middle section of the customer prescrition table based
+     * on given input type
+     * @param type
+     * @return string of table data based on type given
+     */
     private String buildTable(int type) {
         String result = "";
         totalOptimalPoints = 0;
