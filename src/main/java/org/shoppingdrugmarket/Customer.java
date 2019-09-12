@@ -40,40 +40,42 @@ public class Customer {
         String result = "";
 
         for (Prescription prescription : prescriptions) {
-            int thisCost = prescription.getTotalCost();
-            int thisOptimalPoints = prescription.getTotalOptimalPointBonus();
+            int prescriptionCost = prescription.getTotalCost();
+            int prescriptionOptimalPoints = prescription.getTotalOptimalPointBonus();
+            String presciptionCostDecimal = decimalFormat.format(prescriptionCost/100.0) ;
            
             switch(type) {
                 case 0: // text
                     // now we can add to the string, showing the cost and number of points gained per item
                     result +=   "\t " + prescription.getMedication().getMedicationName() + 
-                                ":\t" + decimalFormat.format(thisCost/100.0) + 
-                                "\t" + String.valueOf(thisOptimalPoints) + "\n";
+                                ":\t" + presciptionCostDecimal + 
+                                "\t" + String.valueOf(prescriptionOptimalPoints) + "\n";
                     break;
                 case 1: // html
                     result +=   "<tr><td>" + prescription.getMedication().getMedicationName() +
-                                "</td><td>" + decimalFormat.format(thisCost/100.0) +
-                                "</td><td>" + String.valueOf(thisOptimalPoints) + "</td></tr>";
+                                "</td><td>" + presciptionCostDecimal +
+                                "</td><td>" + String.valueOf(prescriptionOptimalPoints) + "</td></tr>";
                     break;
             }
             
-            totalCost += thisCost / 100;
-            totalOptimalPoints += thisOptimalPoints;
+            totalCost += prescriptionCost / 100;
+            totalOptimalPoints += prescriptionOptimalPoints;
         }
+        
+        String totalCostDecimal = decimalFormat.format(totalCost);
         
         switch(type) {
             case 0: // text
-                result += "Total cost:\t" + decimalFormat.format(totalCost) + "\n";
-                result += "Total optimal points earned:\t" + String.valueOf(totalOptimalPoints) + "\n";
+                result += "Total cost:\t" + totalCostDecimal + "\n";
+                result += "Total optimal points earned:\t" + totalOptimalPoints + "\n";
                 break;
             case 1: // html
                 result += "</table>";
-                result += "<p>Total cost: " + decimalFormat.format(totalCost) + "</p>";
+                result += "<p>Total cost: " + totalCostDecimal + "</p>";
                 result += "<p>Total optimal points earned: " + totalOptimalPoints + "</p></body></html>";
                 break;
         }
 
-        
         return result;
     }
 
