@@ -8,8 +8,11 @@ import java.util.List;
  * A customer of Shopping Drug Market
  */
 public class Customer {
-    private String name;
-    private List<Prescription> prescriptions = new ArrayList();
+    private final String name;
+    private final List<Prescription> prescriptions = new ArrayList();
+    private final DecimalFormat decimalFormat = new DecimalFormat("#.00");
+    private int totalOptimalPoints;
+    private double totalCost;
 
     /**
      * A customer must have a name
@@ -18,6 +21,8 @@ public class Customer {
      */
     public Customer(String name) {
         this.name = name;
+        this.totalOptimalPoints = 0;
+        this.totalCost = 0;
     }
 
     /**
@@ -33,11 +38,14 @@ public class Customer {
         return name;
     }
     
-    private String getResult(int type) {
-        double totalCost = 0.0;
-        int totalOptimalPoints = 0;
-        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+    private String getTotalDecimalCost() {
+        return decimalFormat.format(totalCost);
+    }
+    
+    private String buildTable(int type) {
         String result = "";
+        totalOptimalPoints = 0;
+        totalCost = 0.0;
 
         for (Prescription prescription : prescriptions) {
             int prescriptionCost = prescription.getTotalCost();
@@ -62,20 +70,6 @@ public class Customer {
             totalOptimalPoints += prescriptionOptimalPoints;
         }
         
-        String totalCostDecimal = decimalFormat.format(totalCost);
-        
-        switch(type) {
-            case 0: // text
-                result += "Total cost:\t" + totalCostDecimal + "\n";
-                result += "Total optimal points earned:\t" + totalOptimalPoints + "\n";
-                break;
-            case 1: // html
-                result += "</table>";
-                result += "<p>Total cost: " + totalCostDecimal + "</p>";
-                result += "<p>Total optimal points earned: " + totalOptimalPoints + "</p></body></html>";
-                break;
-        }
-
         return result;
     }
 
@@ -86,8 +80,11 @@ public class Customer {
      */
     public String generatePrescriptionReceiptText() {
         String result = "Prescription receipt for " + getName() + ":\n";
-        result += getResult(0);
-        System.out.println(getResult(0));
+
+        result += buildTable(0);
+        
+        result += "Total cost:\t" + getTotalDecimalCost() + "\n";
+        result += "Total optimal points earned:\t" + totalOptimalPoints + "\n";
 
         return result;
     }
@@ -100,7 +97,12 @@ public class Customer {
     public String generatePrescriptionReceiptHtml() {
         String result = "<html><body><p><h3>Prescription receipt for " + getName() + ":</h3></p>";
         result += "<table><tr><th>Medication</th><th>Price</th><th>Optimal Points</th></tr>";
-        result += getResult(1);
+
+        result += buildTable(1);
+
+        result += "</table>";
+        result += "<p>Total cost: " + getTotalDecimalCost() + "</p>";
+        result += "<p>Total optimal points earned: " + totalOptimalPoints + "</p></body></html>";
 
         return result;
     }
